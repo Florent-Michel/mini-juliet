@@ -1,0 +1,64 @@
+
+Sans précision, ça concerne le test "bad"
+
+
+CWE 121 (stack buffer overflow) : pas d'alarme quand memcpy déborde sur le sous objet suivant (de type void*) dans une struct mais alarme \warning ("match format and arguments") pour un mauvais format dans printf car un pointeur a été overwritten par un string dans la struct
+
+Remarque : dommage qu'il n'y ait pas d'alarme dès le memcpy (possible d'après Pascal mais demanderait de faire un nouveau domaine abstrait etc)
+
+CWE 122 (heap based buffer overflow) : idem 121 avec allocation dynamique
+
+CWE 124 (buffer underwrite) : alarme pointer_arithmetic dès le calcul du pointeur interdit (buffer-8)
+
+CWE 126 (buffer overread) : alarme mem_access \valid_read quand on essaie de lire au delà de la zone initialisée
+
+CWE 127 (buffer underread) : idem 124
+
+//TODO : CWE 195 (signed to unsigned conversion)
+
+//TODO : CWE 369 (divide by zero)
+
+CWE 401 (memory leak) : pas d'alarme si on ne free pas après malloc (ok)
+
+Remarque : possible de mettre des warning pour les memory leak sans interrompre l'analyse pour autant ?
+
+CWE 415 (double free malloc) : alarme dangling_pointer quand on free deux fois un même pointeur
+
+Remarque : alarme plus explicite pour free ?
+
+CWE 416 (use after free malloc) : alarme dangling_pointer quand on essaie de print un char* après l'avoir free
+
+CWE 457 (use of uninitialized variable) : alarme initialisation \initialized quand on essaie de print un char* non initialisé
+
+Remarque : quelle différence entre variable non initialisée et dangling pointer ?
+
+CWE 469 (use of pointer substraction) : alarme differing_blocks \base_addr ... = \base_addr ... quand on soustrait deux pointeurs qui pointent vers deux blocs différents
+
+CWE 475 (undefined behavior for input to API) : alarme \warning ("no overlap between source and destination objects") quand on fait un memcpy entre deux zones mémoire qui s'intersectent
+
+CWE 476 (NULL pointer dereference) : alarme mem_access \valid read quand on essaie de déréférencer un pointeur (initialisé à NULL) vers une struct
+
+Remarque : pourrait peut-être plutôt dire qu'on essaie de déréférencer le pointeur NULL ?
+
+CWE 562 (return of stack variable address) : alarme dangling_pointer quand on essaie de print un char* (retourné par une fonction) qui n'est pas initialisé en dehors de l'appel de la fonction qui l'a retourné
+
+CWE 587 (assignement of fixed address to pointer) : alarme mem_access \valid_read quand on déréférence un pointeur qui pointe vers une addresse fixée "à la main" (0x400000)
+
+CWE 665 (improper initialization char cat) : alarme valid_string \points_to_valid_string quand on appelle strcat sur un tableau de char non initialisé
+
+Remarque : préciser en quoi le string n'est pas valide ?
+
+CWE 685 (function call with incorrect number of arguments) : alarme \warning ("match format and arguments") quand on appelle sprintf avec trop peu d'arguments par rapport au format
+
+CWE 688 (function call with incorect variable or reference as argument) : alarme \warning ("match format and arguments") quand on donne un argument du mauvais type par rapport au format dans sprintf
+
+Remarque : être plus explicite dans le message d'erreur ?
+
+CWE 690 (NULL deref from return char calloc) : Pas d'alarme, visiblement l'erreur de programmation serait de ne pas vérifier que l'allocation de mémoire s'est bien déroulée
+
+CWE 758 (undefined behavior char alloca) : alarme initialisation \initialized quand on essaie de print le contenu d'une zone mémoire non initialisée
+
+CWE 853 (type confusion) : alarme dangling pointer (dans le good aussi !) car on déréférence un pointeur hors du bloc dans lequel il a été initialisé, mais ce n'est pas le but du test !
+
+
+
