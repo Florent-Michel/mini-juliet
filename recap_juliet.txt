@@ -1,5 +1,5 @@
 
-Sans précision, ça concerne le test "bad"
+Sauf précision (cf le dernier test par exemple), ça concerne le test "bad"
 
 
 CWE 121 (stack buffer overflow) : pas d'alarme quand memcpy déborde sur le sous objet suivant (de type void*) dans une struct mais alarme \warning ("match format and arguments") pour un mauvais format dans printf car un pointeur a été overwritten par un string dans la struct
@@ -14,9 +14,11 @@ CWE 126 (buffer overread) : alarme mem_access \valid_read quand on essaie de lir
 
 CWE 127 (buffer underread) : idem 124
 
-//TODO : CWE 195 (signed to unsigned conversion)
+CWE 195 (signed to unsigned conversion) : alarme logic_mem_access \valid_read quand on fait un memcpy avec -1 comme dernier argument (il est converti implicitement en unsigned int et devient donc très grand)
 
-//TODO : CWE 369 (divide by zero)
+Remarque : l'alarme est peu éclairante sur la vraie source d'erreur (conversion implicite), il faut fouiller dans le code normalisé pour voir que le vrai argument de memcpy est (size t)(-1) et vaut en réalité 4294967295
+
+CWE 369 (divide by zero) : alarme float_to_int \is_finite ^ -21474... < ... < 21474... quand on divise 100.0 par 0.0
 
 CWE 401 (memory leak) : pas d'alarme si on ne free pas après malloc (ok)
 
@@ -24,7 +26,7 @@ Remarque : possible de mettre des warning pour les memory leak sans interrompre 
 
 CWE 415 (double free malloc) : alarme dangling_pointer quand on free deux fois un même pointeur
 
-Remarque : alarme plus explicite pour free ?
+Remarque : alarme plus explicite dans le cas de free ?
 
 CWE 416 (use after free malloc) : alarme dangling_pointer quand on essaie de print un char* après l'avoir free
 
@@ -58,7 +60,4 @@ CWE 690 (NULL deref from return char calloc) : Pas d'alarme, visiblement l'erreu
 
 CWE 758 (undefined behavior char alloca) : alarme initialisation \initialized quand on essaie de print le contenu d'une zone mémoire non initialisée
 
-CWE 853 (type confusion) : alarme dangling pointer (dans le good aussi !) car on déréférence un pointeur hors du bloc dans lequel il a été initialisé, mais ce n'est pas le but du test !
-
-
-
+CWE 843 (type confusion) : alarme dangling pointer (dans le good aussi !) car on déréférence un pointeur hors du bloc dans lequel il a été initialisé, mais ce n'est pas le but du test !
